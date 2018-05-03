@@ -17,12 +17,18 @@ import org.springframework.web.bind.annotation.RestController;
 import com.argento.signaler.model.Alarm;
 import com.argento.signaler.repository.AlarmsRepository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
+
 @RestController
 @RequestMapping("/alarms")
 public class AlarmsController {
 
-	
 	AlarmsRepository alarmsRepository;
+	
+	Logger logger = LoggerFactory.getLogger(AlarmsController.class);
 	
 	public AlarmsController(AlarmsRepository alarmsRepository) {
 		this.alarmsRepository = alarmsRepository;
@@ -32,6 +38,8 @@ public class AlarmsController {
 	@GetMapping("/")
 	public ResponseEntity<List<Alarm>> getAlarms(){
 
+		logger.info("getAlarms");
+		
 		List<Alarm> list = new ArrayList<>();
 		
 		return ResponseEntity
@@ -43,6 +51,9 @@ public class AlarmsController {
 
 	@PostMapping("/")
 	public ResponseEntity<Alarm> createAlarm(Alarm alarm){
+		
+		logger.info("createAlarm: %s", alarm.getTitle());
+		
 		Alarm newAlarm = alarmsRepository.save(alarm);
 		
 		return ResponseEntity
@@ -53,6 +64,9 @@ public class AlarmsController {
 	
 	@PutMapping("/{alarmId}")
 	public ResponseEntity<Alarm> updateAlarm(@PathVariable Long alarmId, @RequestBody Alarm alarm){
+		
+		logger.info("updateAlarm: %s", alarmId);
+		
 		Alarm updatedAlarm = alarmsRepository.save(alarm);
 		
 		return ResponseEntity
@@ -63,17 +77,13 @@ public class AlarmsController {
 	
 	@DeleteMapping("/{alarmId}")
 	public ResponseEntity<String> deletedAlarm(@PathVariable Long alarmId){
+		
+		logger.info("deletedAlarm: %s", alarmId);
+		
 		alarmsRepository.deleteById(alarmId);
 		
 		return ResponseEntity
 	            .ok()
 	            .body("Done");
 	}
-	
-	
-	
-	
-	
-	
-	
 }
